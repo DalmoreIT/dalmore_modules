@@ -1,4 +1,4 @@
-package import_modules
+package dalmore_modules
 
 import (
 	"fmt"
