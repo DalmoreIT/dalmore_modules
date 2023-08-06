@@ -1,4 +1,4 @@
-package main
+package import_modules
 
 import (
 	"fmt"
@@ -226,10 +226,4 @@ func (c *Client) auth() error {
 		return nil, nil
 	})
 	return err
-}
-
-func main() {
-	//initialize new client for making pocketbase calls
-	client := NewClient("https://mypocketbase.com", "myadmin@test.com", "mypassword")
-	fmt.Println(client)
 }
