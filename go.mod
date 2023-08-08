@@ -1,5 +1,4 @@
-module github.com/DalmoreIT/dalmore_modules
-
+module github.com/DalmoreIT/pbgo
 go 1.20
 
 require (
