@@ -1,4 +1,4 @@
-module github.com/pdarceno/dalmore_modules
+module github.com/DalmoreIT/dalmore_modules
 
 go 1.20
 
