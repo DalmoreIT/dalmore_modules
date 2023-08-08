@@ -1,4 +1,4 @@
-package dalmore_modules
+package pbgo
 
 import (
 	"fmt"
