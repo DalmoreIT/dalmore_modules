@@ -58,6 +58,34 @@ type (
 	}
 )
 
+type (
+	InvestmentResponse struct {
+		Offering        	string    `json:"offering"`
+		InvestorAccount         string    `json:"investorAccount"`
+		RrApprovalStatus        string    `json:"rrApprovalStatus"`
+		TransactionId           string    `json:"transactionId"`
+		PrimaryBGCheckId        string    `json:"primaryBGCheckId"`
+		PaymentMethod           string    `json:"paymentMethod"`
+		DateInvested            time.Time `json:"dateInvested"`
+		CommissionPaid          int       `json:"commissionPaid"`
+		CommissionPaidDate      time.Time `json:"commissionPaidDate"`
+		Status                  string    `json:"status"`
+		Signed                  string    `json:"signed"`
+		SubAgreementURL         string    `json:"subAgreementURL"`
+		BoxFolderURL            string    `json:"boxFolderURL"`
+		InvestedAmount          int       `json:"investedAmount"`
+		SharesTotal             int       `json:"sharesTotal"`
+		RegisteredRepId         string    `json:"registeredRepId"`
+		Notes                   string    `json:"notes"`
+		ComplianceApproveStatus string    `json:"complianceApproveStatus"`
+		ComplianceApproveDate   time.Time `json:"complianceApproveDate"`
+		ReviewingPrincipalName  string    `json:"reviewingPrincipalName"`
+		ReviewingPrincipalEmail string    `json:"reviewingPrincipalEmail"`
+		ComplianceNotes         string    `json:"complianceNotes"`
+		SupportNotes            string    `json:"supportNotes"`
+	}
+)
+
 func NewClient(url, email, password string) *Client {
 	client := resty.New()
 	client.
