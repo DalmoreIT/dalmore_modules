@@ -65,29 +65,29 @@ type (
 		TotalItems int `json:"totalItems"`
 		TotalPages int `json:"totalPages"`
 		Items      []struct {
-			Offering                string    `json:"offering"`
-			InvestorAccount         string    `json:"investorAccount"`
-			RrApprovalStatus        string    `json:"rrApprovalStatus"`
-			TransactionId           string    `json:"transactionId"`
-			PrimaryBGCheckId        string    `json:"primaryBGCheckId"`
-			PaymentMethod           string    `json:"paymentMethod"`
-			DateInvested            time.Time `json:"dateInvested"`
-			CommissionPaid          int       `json:"commissionPaid"`
-			CommissionPaidDate      time.Time `json:"commissionPaidDate"`
-			Status                  string    `json:"status"`
-			Signed                  string    `json:"signed"`
-			SubAgreementURL         string    `json:"subAgreementURL"`
-			BoxFolderURL            string    `json:"boxFolderURL"`
-			InvestedAmount          int       `json:"investedAmount"`
-			SharesTotal             int       `json:"sharesTotal"`
-			RegisteredRepId         string    `json:"registeredRepId"`
-			Notes                   string    `json:"notes"`
-			ComplianceApproveStatus string    `json:"complianceApproveStatus"`
-			ComplianceApproveDate   time.Time `json:"complianceApproveDate"`
-			ReviewingPrincipalName  string    `json:"reviewingPrincipalName"`
-			ReviewingPrincipalEmail string    `json:"reviewingPrincipalEmail"`
-			ComplianceNotes         string    `json:"complianceNotes"`
-			SupportNotes            string    `json:"supportNotes"`
+			Offering                string `json:"offering"`
+			InvestorAccount         string `json:"investorAccount"`
+			RrApprovalStatus        string `json:"rrApprovalStatus"`
+			TransactionId           string `json:"transactionId"`
+			PrimaryBGCheckId        string `json:"primaryBGCheckId"`
+			PaymentMethod           string `json:"paymentMethod"`
+			DateInvested            string `json:"dateInvested"`
+			CommissionPaid          int    `json:"commissionPaid"`
+			CommissionPaidDate      string `json:"commissionPaidDate"`
+			Status                  string `json:"status"`
+			Signed                  string `json:"signed"`
+			SubAgreementURL         string `json:"subAgreementURL"`
+			BoxFolderURL            string `json:"boxFolderURL"`
+			InvestedAmount          int    `json:"investedAmount"`
+			SharesTotal             int    `json:"sharesTotal"`
+			RegisteredRepId         string `json:"registeredRepId"`
+			Notes                   string `json:"notes"`
+			ComplianceApproveStatus string `json:"complianceApproveStatus"`
+			ComplianceApproveDate   string `json:"complianceApproveDate"`
+			ReviewingPrincipalName  string `json:"reviewingPrincipalName"`
+			ReviewingPrincipalEmail string `json:"reviewingPrincipalEmail"`
+			ComplianceNotes         string `json:"complianceNotes"`
+			SupportNotes            string `json:"supportNotes"`
 		} `json:"items"`
 	}
 )
@@ -134,9 +134,9 @@ func (c *Client) Update(collection string, id string, body any) error {
 	return nil
 }
 
-func (c *Client) Create(collection string, body any) error {
+func (c *Client) Create(collection string, body any) ([]byte, error) {
 	if err := c.auth(); err != nil {
-		return err
+		return nil, err
 	}
 
 	request := c.client.R().
@@ -146,19 +146,18 @@ func (c *Client) Create(collection string, body any) error {
 
 	resp, err := request.Post(c.url + "/api/collections/{collection}/records")
 	if err != nil {
-		return fmt.Errorf("[create] can't send update request to pocketbase, err %w", err)
+		//print POST request failed
+		fmt.Println("POST request failed")
+		return nil, err
 	}
 
 	if resp.IsError() {
-		return fmt.Errorf("[create] pocketbase returned status: %d, msg: %s, body: %s, err %w",
-			resp.StatusCode(),
-			resp.String(),
-			fmt.Sprintf("%+v", body), // TODO remove that after debugging
-			ErrInvalidResponse,
-		)
+		fmt.Println("Response error code: ", resp.StatusCode())
+		fmt.Println("Response error string: ", resp.String())
+		return nil, err
 	}
 
-	return nil
+	return resp.Body(), nil
 }
 
 func (c *Client) Delete(collection string, id string) error {
