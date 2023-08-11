@@ -37,62 +37,6 @@ type (
 	}
 )
 
-type (
-	response struct {
-		Page       int `json:"page"`
-		PerPage    int `json:"perPage"`
-		TotalItems int `json:"totalItems"`
-		TotalPages int `json:"totalPages"`
-		Items      []struct {
-			CollectionID   string   `json:"@collectionId"`
-			CollectionName string   `json:"@collectionName"`
-			Content        string   `json:"content"`
-			Created        string   `json:"created"`
-			Description    string   `json:"description"`
-			ID             string   `json:"id"`
-			TickerIds      []string `json:"ticker_ids"`
-			Title          string   `json:"title"`
-			Updated        string   `json:"updated"`
-			URL            string   `json:"url"`
-		} `json:"items"`
-	}
-)
-
-type (
-	InvestmentResponse struct {
-		Page       int `json:"page"`
-		PerPage    int `json:"perPage"`
-		TotalItems int `json:"totalItems"`
-		TotalPages int `json:"totalPages"`
-		Items      []struct {
-			ID                      string `json:"id"`
-			Offering                string `json:"offering"`
-			InvestorAccount         string `json:"investorAccount"`
-			RrApprovalStatus        string `json:"rrApprovalStatus"`
-			TransactionId           string `json:"transactionId"`
-			PrimaryBGCheckId        string `json:"primaryBGCheckId"`
-			PaymentMethod           string `json:"paymentMethod"`
-			DateInvested            string `json:"dateInvested"`
-			CommissionPaid          int    `json:"commissionPaid"`
-			CommissionPaidDate      string `json:"commissionPaidDate"`
-			Status                  string `json:"status"`
-			Signed                  string `json:"signed"`
-			SubAgreementURL         string `json:"subAgreementURL"`
-			BoxFolderURL            string `json:"boxFolderURL"`
-			InvestedAmount          int    `json:"investedAmount"`
-			SharesTotal             int    `json:"sharesTotal"`
-			RegisteredRepId         string `json:"registeredRepId"`
-			Notes                   string `json:"notes"`
-			ComplianceApproveStatus string `json:"complianceApproveStatus"`
-			ComplianceApproveDate   string `json:"complianceApproveDate"`
-			ReviewingPrincipalName  string `json:"reviewingPrincipalName"`
-			ReviewingPrincipalEmail string `json:"reviewingPrincipalEmail"`
-			ComplianceNotes         string `json:"complianceNotes"`
-			SupportNotes            string `json:"supportNotes"`
-		} `json:"items"`
-	}
-)
-
 func NewClient(url, email, password string) *Client {
 	client := resty.New()
 	client.
