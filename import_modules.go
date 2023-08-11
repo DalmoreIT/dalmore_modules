@@ -65,6 +65,7 @@ type (
 		TotalItems int `json:"totalItems"`
 		TotalPages int `json:"totalPages"`
 		Items      []struct {
+			ID                      string `json:"id"`
 			Offering                string `json:"offering"`
 			InvestorAccount         string `json:"investorAccount"`
 			RrApprovalStatus        string `json:"rrApprovalStatus"`
