@@ -99,7 +99,7 @@ func (c *Client) Create(collection string, body any) ([]byte, error) {
 	if resp.IsError() {
 		fmt.Println("Response error code: ", resp.StatusCode())
 		fmt.Println("Response error string: ", resp.String())
-		return nil, err
+		return nil, errors.New(resp.String())
 	}
 
 	return resp.Body(), nil
