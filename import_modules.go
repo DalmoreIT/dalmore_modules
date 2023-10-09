@@ -170,9 +170,9 @@ func (c *Client) List(collection string, params Params) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (c *Client) View(collection string, id string) ([]byte, error) {
+func (c *Client) View(collection string, id string) ([]byte, error, bool) {
 	if err := c.auth(); err != nil {
-		return []byte{}, err
+		return []byte{}, err, false
 	}
 
 	request := c.client.R().
@@ -182,11 +182,11 @@ func (c *Client) View(collection string, id string) ([]byte, error) {
 
 	resp, err := request.Get(c.url + "/api/collections/{collection}/records/{id}")
 	if err != nil {
-		return []byte{}, fmt.Errorf("[view] can't send update request to pocketbase, err %w", err)
+		return []byte{}, fmt.Errorf("[view] can't send update request to pocketbase, err %w", err), false
 	}
 
 	if resp.StatusCode() == http.StatusNotFound {
-		return []byte{}, fmt.Errorf("%s not found", collection)
+		return []byte{}, fmt.Errorf("%s not found", collection), true
 	}
 
 	if resp.IsError() {
@@ -194,10 +194,10 @@ func (c *Client) View(collection string, id string) ([]byte, error) {
 			resp.StatusCode(),
 			resp.String(),
 			ErrInvalidResponse,
-		)
+		), false
 	}
 
-	return resp.Body(), nil
+	return resp.Body(), nil, false
 }
 
 func (c *Client) auth() error {
