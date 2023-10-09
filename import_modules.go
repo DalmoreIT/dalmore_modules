@@ -2,6 +2,7 @@ package pbgo
 
 import (
 	"fmt"
+	"net/http"
 
 	"errors"
 	"time"
@@ -160,6 +161,36 @@ func (c *Client) List(collection string, params Params) ([]byte, error) {
 
 	if resp.IsError() {
 		return []byte{}, fmt.Errorf("[list] pocketbase returned status: %d, msg: %s, err %w",
+			resp.StatusCode(),
+			resp.String(),
+			ErrInvalidResponse,
+		)
+	}
+
+	return resp.Body(), nil
+}
+
+func (c *Client) View(collection string, id string) ([]byte, error) {
+	if err := c.auth(); err != nil {
+		return []byte{}, err
+	}
+
+	request := c.client.R().
+		SetHeader("Content-Type", "application/json").
+		SetPathParam("collection", collection).
+		SetPathParam("id", id)
+
+	resp, err := request.Get(c.url + "/api/collections/{collection}/records/{id}")
+	if err != nil {
+		return []byte{}, fmt.Errorf("[view] can't send update request to pocketbase, err %w", err)
+	}
+
+	if resp.StatusCode() == http.StatusNotFound {
+		return []byte{}, fmt.Errorf("%s not found", collection)
+	}
+
+	if resp.IsError() {
+		return []byte{}, fmt.Errorf("[view] pocketbase returned status: %d, msg: %s, err %w",
 			resp.StatusCode(),
 			resp.String(),
 			ErrInvalidResponse,
