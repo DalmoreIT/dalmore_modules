@@ -200,6 +200,33 @@ func (c *Client) View(collection string, id string) ([]byte, error, bool) {
 	return resp.Body(), nil, false
 }
 
+func (c *Client) ImportCallback(collection string) ([]byte, error) {
+	if err := c.auth(); err != nil {
+		return []byte{}, err
+	}
+
+	request := c.client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(map[string]interface{}{
+			"collection_name": collection,
+		})
+
+	resp, err := request.Post(c.url + "/api/v1/import/callback")
+	if err != nil {
+		return []byte{}, fmt.Errorf("[import/callback] can't send update request to pocketbase, err %w", err)
+	}
+
+	if resp.IsError() {
+		return []byte{}, fmt.Errorf("[import/callback] pocketbase returned status: %d, msg: %s, err %w",
+			resp.StatusCode(),
+			resp.String(),
+			ErrInvalidResponse,
+		)
+	}
+
+	return resp.Body(), nil
+}
+
 func (c *Client) auth() error {
 	_, err, _ := c.tokenSingle.Do("auth", func() (interface{}, error) {
 		if time.Now().Before(c.tokenValid) {
