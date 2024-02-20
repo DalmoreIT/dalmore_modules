@@ -200,16 +200,14 @@ func (c *Client) View(collection string, id string) ([]byte, error, bool) {
 	return resp.Body(), nil, false
 }
 
-func (c *Client) ImportCallback(collection string) ([]byte, error) {
+func (c *Client) ImportCallback(body any) ([]byte, error) {
 	if err := c.auth(); err != nil {
 		return []byte{}, err
 	}
 
 	request := c.client.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(map[string]interface{}{
-			"collection_name": collection,
-		})
+		SetBody(body)
 
 	resp, err := request.Post(c.url + "/api/v1/import/callback")
 	if err != nil {
