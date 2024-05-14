@@ -55,13 +55,17 @@ func NewClient(url, email, password string) *Client {
 	}
 }
 
-func (c *Client) Update(collection string, id string, body any) error {
+func (c *Client) Update(collection, id, origin string, body any) error {
 	if err := c.auth(); err != nil {
 		return err
 	}
 
 	request := c.client.R().
 		SetHeader("Content-Type", "application/json").
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"X-Origin":     origin,
+		}).
 		SetPathParam("collection", collection).
 		SetBody(body)
 
@@ -80,13 +84,16 @@ func (c *Client) Update(collection string, id string, body any) error {
 	return nil
 }
 
-func (c *Client) Create(collection string, body any) ([]byte, error) {
+func (c *Client) Create(collection, origin string, body any) ([]byte, error) {
 	if err := c.auth(); err != nil {
 		return nil, err
 	}
 
 	request := c.client.R().
-		SetHeader("Content-Type", "application/json").
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"X-Origin":     origin,
+		}).
 		SetPathParam("collection", collection).
 		SetBody(body)
 
@@ -106,13 +113,16 @@ func (c *Client) Create(collection string, body any) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (c *Client) Delete(collection string, id string) error {
+func (c *Client) Delete(collection, id, origin string) error {
 	if err := c.auth(); err != nil {
 		return err
 	}
 
 	request := c.client.R().
-		SetHeader("Content-Type", "application/json").
+		SetHeaders(map[string]string{
+			"Content-Type": "application/json",
+			"X-Origin":     origin,
+		}).
 		SetPathParam("collection", collection).
 		SetPathParam("id", id)
 
