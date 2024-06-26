@@ -31,10 +31,12 @@ type (
 	}
 
 	Params struct {
-		Page    int
-		Size    int
-		Filters string
-		Sort    string
+		Page      int
+		Size      int
+		Filters   string
+		Sort      string
+		Fields    string
+		SkipTotal int
 	}
 )
 
@@ -163,6 +165,12 @@ func (c *Client) List(collection string, params Params) ([]byte, error) {
 	if params.Sort != "" {
 		request.SetQueryParam("sort", params.Sort)
 	}
+	if params.Fields != "" {
+		request.SetQueryParam("fields", params.Fields)
+	}
+	if params.SkipTotal == 1 {
+		request.SetQueryParam("skipTotal", convertor.ToString(params.SkipTotal))
+	}
 
 	resp, err := request.Get(c.url + "/api/collections/{collection}/records")
 	if err != nil {
@@ -180,7 +188,7 @@ func (c *Client) List(collection string, params Params) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (c *Client) View(collection string, id string) ([]byte, error, bool) {
+func (c *Client) View(collection string, id string, params Params) ([]byte, error, bool) {
 	if err := c.auth(); err != nil {
 		return []byte{}, err, false
 	}
@@ -189,6 +197,10 @@ func (c *Client) View(collection string, id string) ([]byte, error, bool) {
 		SetHeader("Content-Type", "application/json").
 		SetPathParam("collection", collection).
 		SetPathParam("id", id)
+
+	if params.Fields != "" {
+		request.SetQueryParam("fields", params.Fields)
+	}
 
 	resp, err := request.Get(c.url + "/api/collections/{collection}/records/{id}")
 	if err != nil {
